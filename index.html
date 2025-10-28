@@ -6,103 +6,55 @@
     <title>Generator Prompt Avatar</title>
     <!-- Memuat Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Font Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Icon Library (untuk loading spinner) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Memuat ikon (Lucide) - DIPERBAIKI -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Mengatur font default ke Inter */
+        /* Menggunakan font Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9; /* bg-slate-100 */
+            background-color: #f7fafc; /* Latar belakang abu-abu sangat muda */
         }
-        /* Style untuk blok prompt agar mudah dibaca (digunakan di JS) */
-        .prompt-block {
-            background-color: #1e293b; /* bg-slate-800 */
-            color: #f1f5f9; /* text-slate-100 */
-            padding: 1rem;
-            border-radius: 0.5rem;
-            font-family: monospace;
-            font-size: 0.875rem;
-            line-height: 1.4;
-            min-height: 100px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            border: 1px dashed #475569; /* border-slate-600 */
+        
+        /* Style untuk tombol radio kustom */
+        .has-[:checked]:bg-blue-50 {
+            background-color: #eff6ff;
         }
-        /* Style untuk placeholder upload gambar */
-        #image-preview-container {
-            border: 2px dashed #cbd5e1; /* border-slate-300 */
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8fafc; /* bg-slate-50 */
-            min-height: 200px;
-            color: #64748b; /* text-slate-500 */
+        .has-[:checked]:border-blue-500 {
+            border-color: #3b82f6;
         }
-        #image-preview {
-            max-height: 300px;
-            width: auto;
-            border-radius: 0.25rem;
-        }
-        /* Sembunyikan input file asli */
-        input[type="file"] {
-            display: none;
-        }
-        /* Style kustom untuk tombol upload */
-        .file-upload-label {
-            cursor: pointer;
-            background-color: #ffffff;
-            color: #334155; /* text-slate-700 */
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            border: 1px solid #cbd5e1; /* border-slate-300 */
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .file-upload-label:hover {
-            background-color: #f8fafc; /* bg-slate-50 */
-        }
-        /* Loading spinner */
+
+        /* Style untuk spinner/loading */
         .spinner {
-            display: none; /* Sembunyi secara default */
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-slate-100">
+<body class="p-4 md:p-8">
 
-    <div class="container mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">
-                Generator Prompt Avatar Profesional
-            </h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-                Unggah gambar produk dan tulis deskripsinya. AI akan membuatkan 5 opsi prompt avatar Asia Tenggara yang sempurna untuk video Anda.
-            </p>
-        </header>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <!-- Konten Utama (Input & Output) -->
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            
-            <!-- Kolom Input -->
-            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
-                <!-- Bagian API Key -->
-                <div class="mb-6 pb-6 border-b border-slate-200">
-                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Pengaturan API Key</h2>
+        <!-- Kolom Kiri: Input Pengguna -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+            <h1 class="text-3xl font-bold text-slate-800 mb-6">Generator Prompt Avatar</h1>
+
+            <!-- 1. Pengaturan API Key -->
+            <div class="mb-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-700 mb-3">Pengaturan API Key</h2>
+                <div class="space-y-3">
                     <label for="api-key-input" class="block text-sm font-medium text-gray-700 mb-2">Google AI Studio API Key</label>
                     <div id="api-key-form" class="flex items-center space-x-2">
                         <input type="password" id="api-key-input" class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Masukkan API Key Anda...">
-                        <button id="save-key-button" onclick="saveKey()" class="bg-green-500 text-white font-medium py-3 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center w-32">
-                            <i id="save-spinner" class="fas fa-spinner spinner mr-2"></i>
+                        <button id="save-key-button" class="w-32 flex items-center justify-center bg-blue-600 text-white px-4 py-3 rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all font-medium text-sm">
+                            <span class="spinner" id="save-spinner" style="display: none;"></span>
                             <span id="save-button-text">Simpan</span>
                         </button>
                     </div>
@@ -111,281 +63,343 @@
                     
                     <div id="api-key-display" class="hidden items-center justify-between">
                         <p id="api-key-status" class="text-sm text-green-600 font-medium">API Key tersimpan.</p>
-                        <button id="delete-key-button" onclick="deleteKey()" class="bg-red-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-red-600 transition-colors">Hapus Key</button>
+                        <button id="delete-key-button" class="text-xs text-red-500 hover:text-red-700 hover:underline">Hapus Key</button>
                     </div>
                 </div>
-                <!-- Akhir Bagian API Key -->
+            </div>
 
-                <h2 class="text-2xl font-semibold text-gray-700 mb-6">1. Detail Produk Anda</h2>
-
-                <!-- Deskripsi Produk -->
-                <div class="mb-6">
-                    <label for="product-description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Produk</label>
-                    <textarea id="product-description" rows="6" class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm" placeholder="Contoh: 'Serum wajah anti-aging mewah dengan bahan alami, menargetkan wanita usia 30-50 tahun.'"></textarea>
-                </div>
-
-                <!-- Upload Gambar -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Produk</label>
-                    <div id="image-preview-container">
-                        <span id="image-placeholder">Klik untuk mengunggah gambar</span>
-                        <img id="image-preview" src="" alt="Pratinjau Produk" class="hidden">
+            <!-- 2. Detail Produk Anda -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">1. Unggah Gambar Produk</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg">
+                        <div class="space-y-1 text-center">
+                            <svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <div class="flex text-sm text-slate-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                    <span>Unggah file</span>
+                                    <input id="file-upload" name="file-upload" type="file" class="sr-only" accept="image/png, image/jpeg, image/webp">
+                                </label>
+                                <p class="pl-1">atau seret dan lepas</p>
+                            </div>
+                            <p class="text-xs text-slate-500" id="file-name">PNG, JPG, WEBP hingga 10MB</p>
+                        </div>
                     </div>
-                    <label for="product-image" class="file-upload-label mt-3 inline-block">
-                        <i class="fas fa-upload mr-2"></i> Pilih File
-                    </label>
-                    <input type="file" id="product-image" accept="image/*" onchange="previewImage(event)">
+                    <!-- Image preview -->
+                    <div id="image-preview-container" class="hidden mt-4 text-center">
+                        <img id="image-preview" src="#" alt="Pratinjau Gambar Produk" class="max-h-40 mx-auto rounded-lg shadow-md">
+                        <button id="remove-image" class="mt-2 text-xs text-red-500 hover:underline">Hapus Gambar</button>
+                    </div>
                 </div>
 
-                <!-- Tombol Generate -->
-                <button id="generate-button" onclick="generatePrompt()" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300 flex items-center justify-center text-lg">
-                    <i id="spinner" class="fas fa-spinner spinner mr-3"></i>
-                    <span id="button-text">Buat 5 Opsi Prompt</span>
+                <div>
+                    <label for="product-description" class="block text-sm font-medium text-gray-700 mb-2">2. Deskripsi Produk</label>
+                    <textarea id="product-description" rows="4" class="w-full p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Contoh: Produk serum pencerah baru, bahan alami, menargetkan wanita usia 30-50 tahun."></textarea>
+                </div>
+
+                <!-- 3. Mode Pembuatan Prompt -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">3. Mode Pembuatan Prompt</label>
+                    <div id="prompt-mode" class="flex flex-col sm:flex-row gap-4">
+                        <!-- Opsi 1: Avatar Review -->
+                        <label class="flex-1 flex items-center p-3 border border-slate-300 rounded-lg shadow-sm cursor-pointer has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all">
+                            <input type="radio" name="promptMode" value="review" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" checked>
+                            <div class="ml-3 text-sm">
+                                <span class="font-medium text-slate-800">Avatar Review</span>
+                                <p class="text-xs text-slate-500">Fokus wajah/produk, tanpa latar.</p>
+                            </div>
+                        </label>
+                        <!-- Opsi 2: Model Profesional -->
+                        <label class="flex-1 flex items-center p-3 border border-slate-300 rounded-lg shadow-sm cursor-pointer has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all">
+                            <input type="radio" name="promptMode" value="pro" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <div class="ml-3 text-sm">
+                                <span class="font-medium text-slate-800">Model Profesional</span>
+                                <p class="text-xs text-slate-500">Scene lengkap, latar, & efek.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tombol Buat Prompt -->
+                <button id="generate-button" class="w-full flex items-center justify-center bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all font-semibold text-base">
+                    <span class="spinner" id="generate-spinner" style="display: none; margin-right: 8px;"></span>
+                    <span id="generate-button-text">Buat 5 Opsi Prompt</span>
                 </button>
-            </div>
 
-            <!-- Kolom Output -->
-            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-6">2. Opsi Prompt Avatar (Hasil)</h2>
-                
-                <p id="output-placeholder" class="text-gray-500 text-center py-10">Hasil prompt Anda akan muncul di sini...</p>
-                
-                <!-- Container untuk 5 opsi prompt -->
-                <div id="output-container" class="hidden space-y-6">
-                    <!-- Prompt akan dimasukkan secara dinamis di sini oleh JavaScript -->
+                <!-- Global Error Message -->
+                <div id="error-message" class="hidden bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Output AI -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6">Hasil Prompt</h2>
+            <div id="output-container" class="space-y-4 h-[70vh] overflow-y-auto pr-2">
+                <!-- Placeholder saat kosong -->
+                <div id="placeholder" class="text-center text-slate-400 pt-16">
+                    <svg class="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m1.636-6.364l.707.707M12 21v-1m-6.364-1.636l.707-.707M6 12H5m1.636 6.364l.707-.707"></path></svg>
+                    <p class="mt-4 text-lg font-medium">Hasil prompt Anda akan muncul di sini.</p>
+                    <p class="text-sm">Isi detail produk dan klik "Buat Prompt" untuk memulai.</p>
                 </div>
-                
-                <!-- Pesan Error -->
-                <div id="error-message" class="hidden mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm"></div>
-            </div>
 
-        </main>
+                <!-- Hasil prompt akan dimasukkan di sini oleh JS -->
+                
+            </div>
+        </div>
+
     </div>
 
-    <!-- JavaScript untuk fungsionalitas -->
-    <script>
-        let base64ImageData = "";
-        const API_KEY_STORAGE_KEY = 'googleAiStudioApiKey';
+    <script type="module">
+        // Kunci untuk localStorage
+        const API_KEY_STORAGE_KEY = 'gemini_api_key_avatar_app';
 
-        // --- Fungsi Baru untuk API Key ---
+        // --- Variabel Global untuk UI ---
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveKeyButton = document.getElementById('save-key-button');
+        const deleteKeyButton = document.getElementById('delete-key-button');
+        const apiKeyForm = document.getElementById('api-key-form');
+        const apiKeyDisplay = document.getElementById('api-key-display');
+        const apiKeyStatus = document.getElementById('api-key-status');
+        const apiKeyErrorMessage = document.getElementById('api-key-error');
+        const saveSpinner = document.getElementById('save-spinner');
+        const saveButtonText = document.getElementById('save-button-text');
 
-        // Fungsi untuk memperbarui UI berdasarkan status API Key
+        const fileUpload = document.getElementById('file-upload');
+        const fileName = document.getElementById('file-name');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const removeImageButton = document.getElementById('remove-image');
+        const productDescription = document.getElementById('product-description');
+        const generateButton = document.getElementById('generate-button');
+        const generateSpinner = document.getElementById('generate-spinner');
+        const generateButtonText = document.getElementById('generate-button-text');
+        
+        const outputContainer = document.getElementById('output-container');
+        const placeholder = document.getElementById('placeholder');
+        const globalErrorMessage = document.getElementById('error-message');
+
+        // Variabel untuk menyimpan data gambar
+        let base64ImageData = null;
+        let imageMimeType = null;
+
+        // --- Inisialisasi Aplikasi ---
+        window.onload = () => {
+            updateKeyUI();
+            lucide.createIcons(); // Inisialisasi ikon
+        };
+
+        // --- 1. Logika API Key ---
+
+        /** Memperbarui UI API Key berdasarkan localStorage */
         function updateKeyUI() {
-            const savedKey = localStorage.getItem(API_KEY_STORAGE_KEY);
-            const keyForm = document.getElementById('api-key-form');
-            const keyDisplay = document.getElementById('api-key-display');
-            const keyInput = document.getElementById('api-key-input');
-
-            if (savedKey) {
-                // Key tersimpan
-                keyForm.classList.add('hidden');
-                keyDisplay.classList.remove('hidden');
-                keyDisplay.classList.add('flex'); // Pastikan 'flex' ditambahkan
+            const storedKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+            if (storedKey) {
+                apiKeyForm.classList.add('hidden');
+                apiKeyDisplay.classList.add('flex'); // Tampilkan status 'tersimpan'
+                apiKeyStatus.innerText = `API Key tersimpan.`;
+                apiKeyErrorMessage.classList.add('hidden');
             } else {
-                // Tidak ada key
-                keyForm.classList.remove('hidden');
-                keyDisplay.classList.add('hidden');
-                keyDisplay.classList.remove('flex');
-                keyInput.value = ''; // Pastikan input kosong
+                apiKeyForm.classList.remove('hidden');
+                apiKeyDisplay.classList.add('hidden');
+                apiKeyInput.value = ''; // Kosongkan input
             }
         }
 
-        // Fungsi untuk menyimpan API Key (DIRUBAH UNTUK VALIDASI)
+        /** Menyimpan dan Memvalidasi API Key */
         async function saveKey() {
-            const keyInput = document.getElementById('api-key-input');
-            const key = keyInput.value.trim();
-            // Menggunakan div error SPESIFIK di bawah input key
-            const apiKeyErrorMessage = document.getElementById('api-key-error');
-            
-            // Elemen tombol Simpan
-            const saveButton = document.getElementById('save-key-button');
-            const saveSpinner = document.getElementById('save-spinner');
-            const saveButtonText = document.getElementById('save-button-text');
+            const key = apiKeyInput.value.trim();
 
             if (!key) {
-                // Menampilkan error di div spesifik
                 apiKeyErrorMessage.innerText = "Silakan masukkan API Key yang valid.";
                 apiKeyErrorMessage.classList.remove('hidden');
-                // Sembunyikan setelah 3 detik
                 setTimeout(() => {
                     if (apiKeyErrorMessage.innerText === "Silakan masukkan API Key yang valid.") {
                         apiKeyErrorMessage.classList.add('hidden');
                     }
                 }, 3000);
-                return; // Berhenti jika key kosong
+                return;
             }
 
-            // Tampilkan status validasi
-            saveButton.disabled = true;
+            // Tampilkan status validasi di tombol
+            saveKeyButton.disabled = true; // <-- DIPERBAIKI (sebelumnya saveButton)
             saveSpinner.style.display = 'inline-block';
             saveButtonText.innerText = 'Validasi...';
-            apiKeyErrorMessage.classList.add('hidden'); // Sembunyikan error lama
+            apiKeyErrorMessage.classList.add('hidden');
 
             try {
-                // Lakukan panggilan tes ke Google AI Studio untuk memvalidasi key
-                const validationUrl = `https://generativela${''}nguage.googleapis.com/v1beta/models?key=${key}`;
+                // Panggilan tes ringan untuk validasi key
+                // Kita akan coba ambil detail model 'gemini-2.5-flash-preview-09-2025'
+                // Ini tes yang lebih spesifik daripada hanya 'list models'
+                const validationUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025?key=${key}`;
                 const response = await fetch(validationUrl);
 
                 if (!response.ok) {
-                    // Jika response error (key salah, dll)
                     const errorData = await response.json();
                     const errorMsg = errorData.error?.message || 'API Key tidak valid atau tidak memiliki izin.';
-                    let displayError;
                     
-                    // Seringkali pesannya terlalu teknis, kita sederhanakan
+                    let displayError;
                     if (errorMsg.includes("API key not valid")) {
-                         displayError = 'apikey tidak valid.'; // Persis seperti yang Anda minta
+                        displayError = 'apikey tidak valid.'; // Pesan spesifik
                     } else {
-                         displayError = errorMsg; // Tampilkan error lain jika bukan soal key
+                        displayError = errorMsg;
                     }
                     
-                    // Tampilkan pesan error di UI (div spesifik)
-                    // console.error('Validation error:', displayError); // DIHAPUS - ini yang memicu modal error
                     apiKeyErrorMessage.innerText = displayError;
                     apiKeyErrorMessage.classList.remove('hidden');
-
                 } else {
-                    // Jika berhasil (response.ok)
+                    // Berhasil! Simpan key
                     localStorage.setItem(API_KEY_STORAGE_KEY, key);
                     updateKeyUI();
-                    apiKeyErrorMessage.classList.add('hidden'); // Sembunyikan error jika ada
+                    apiKeyErrorMessage.classList.add('hidden');
                 }
-
             } catch (error) {
-                // Ini akan menangkap error jaringan (misal: tidak ada internet)
-                // console.error('Network/Fetch error:', error); // DIHAPUS - ini yang memicu modal error
+                // Error jaringan
                 apiKeyErrorMessage.innerText = `Validasi gagal: ${error.message}. Periksa koneksi internet Anda.`;
                 apiKeyErrorMessage.classList.remove('hidden');
             } finally {
-                // Setel ulang tombol Simpan
-                saveButton.disabled = false;
+                // Setel ulang tombol
+                saveKeyButton.disabled = false; // <-- DIPERBAIKI (sebelumnya saveButton)
                 saveSpinner.style.display = 'none';
                 saveButtonText.innerText = 'Simpan';
             }
         }
 
-        // Fungsi untuk menghapus API Key
+        /** Menghapus API Key */
         function deleteKey() {
-            localStorage.removeItem(API_KEY_STORAGE_KEY);
-            updateKeyUI();
+            if (confirm('Anda yakin ingin menghapus API Key yang tersimpan?')) {
+                localStorage.removeItem(API_KEY_STORAGE_KEY);
+                updateKeyUI();
+            }
         }
 
-        // Panggil updateKeyUI saat halaman dimuat
-        window.onload = updateKeyUI;
+        // --- 2. Logika Unggah Gambar ---
 
-        // --- Akhir Fungsi API Key ---
-
-        // Fungsi untuk pratinjau gambar
-        function previewImage(event) {
-            const reader = new FileReader();
+        /** Menangani perubahan file input */
+        function handleFileSelect(event) {
             const file = event.target.files[0];
-            
             if (file) {
-                // Batasi ukuran file (misal 5MB)
-                if (file.size > 5 * 1024 * 1024) {
-                    const errorMessage = document.getElementById('error-message');
-                    errorMessage.innerText = "Ukuran file terlalu besar. Harap unggah gambar di bawah 5MB.";
-                    errorMessage.classList.remove('hidden');
-                    event.target.value = null; // Reset input file
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    showGlobalError("Ukuran file terlalu besar. Maksimal 10MB.");
                     return;
                 }
                 
-                reader.onload = function(e) {
-                    const preview = document.getElementById('image-preview');
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                    document.getElementById('image-placeholder').classList.add('hidden');
-                    
-                    // Simpan data base64 (hapus prefix)
-                    base64ImageData = e.target.result.split(',')[1];
+                if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+                    showGlobalError("Format file tidak didukung. Gunakan PNG, JPG, atau WEBP.");
+                    return;
                 }
+
+                imageMimeType = file.type;
+                fileName.innerText = file.name;
+                
+                // Tampilkan pratinjau
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreviewContainer.classList.remove('hidden');
+                    
+                    // Simpan data base64 (setelah 'base64,')
+                    base64ImageData = e.target.result.split(',')[1];
+                };
                 reader.readAsDataURL(file);
             }
         }
 
-        // Fungsi untuk memanggil Gemini API
-        async function generatePrompt() {
-            const description = document.getElementById('product-description').value;
-            const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY); // Mengambil key dari localStorage
-            
-            // Elemen UI
-            const button = document.getElementById('generate-button');
-            const buttonText = document.getElementById('button-text');
-            const spinner = document.getElementById('spinner');
-            const outputPlaceholder = document.getElementById('output-placeholder');
-            const outputContainer = document.getElementById('output-container');
-            const errorMessage = document.getElementById('error-message');
+        /** Menghapus gambar yang dipilih */
+        function removeImage() {
+            fileUpload.value = ''; // Reset input file
+            fileName.innerText = 'PNG, JPG, WEBP hingga 10MB';
+            imagePreviewContainer.classList.add('hidden');
+            imagePreview.src = '#';
+            base64ImageData = null;
+            imageMimeType = null;
+        }
 
-            // --- Validasi API Key ---
-            if (!apiKey) {
-                errorMessage.innerText = "API Key Google AI tidak ditemukan. Harap masukkan dan simpan API Key Anda di bagian 'Pengaturan API Key'.";
-                errorMessage.classList.remove('hidden');
-                // Setar ulang tombol generate
-                button.disabled = false;
-                buttonText.innerText = 'Buat 5 Opsi Prompt';
-                spinner.style.display = 'none';
-                return;
-            }
-            // --- Akhir Validasi API Key ---
+        // --- 3. Logika Pembuatan Prompt (AI) ---
+
+        // OTAK AI 1: Untuk Avatar Review
+        const systemPrompt_Review = {
+            parts: [{ text: `You are an expert casting model for product review videos in Southeast Asia.
+Your task is to create 5 DIFFERENT image prompt options for a review video avatar.
+Avatars MUST be from specific Southeast Asian nationalities (Indonesian, Thai, Vietnamese, Malaysian, Filipino). DO NOT use the term "Southeast Asian".
+The prompt MUST focus ONLY on the avatar's appearance (face, hair, expression) and their uniform/clothing (must be relevant to the product).
+Expression must be friendly, honest, and convincing, as if giving a testimonial.
+DO NOT describe background, pose, lighting, or cinematic style.
+Output MUST be in English.
+DO NOT use markdown. Return the 5 options in a JSON string array.
+Example: ["A 30s Indonesian woman...", "A smiling Thai man..."]`}]
+        };
+
+        // OTAK AI 2: Untuk Model Profesional
+        const systemPrompt_Pro = {
+            parts: [{ text: `You are a Creative Director for a high-end brand photoshoot.
+Your task is to create 5 DIFFERENT image prompt options for a professional ad scene.
+Avatars MUST be from specific Southeast Asian nationalities (Indonesian, Thai, Vietnamese, Malaysian, Filipino). DO NOT use the term "Southeast Asian".
+
+CRITICAL RULE: The model should NOT be shown using, holding, applying, or interacting with the product. The model should pose professionally to represent the brand's image and atmosphere.
+
+The prompt MUST describe the COMPLETE SCENE in English:
+1.  **Avatar:** Specific actor/model (age, gender, nationality), looking confident and professional.
+2.  **Clothing:** Professional or stylish uniform/outfit (not interacting with the product).
+3.  **Background:** A supportive, high-quality interior or exterior (office, nature, luxury cafe).
+4.  **Lighting & Effects:** (e.g., "Golden hour", "Bright studio lighting", "Bokeh effect").
+The style must be cinematic, elegant, and professional.
+Output MUST be in English.
+DO NOT use markdown. Return the 5 options in a JSON string array.
+Example: ["A confident Indonesian male executive in a sharp suit, standing in a modern high-rise office overlooking the city, soft morning light.", "An elegant Vietnamese woman in a silk dress, posing in a beautiful botanical garden, soft bokeh background."]`}]
+        };
+
+        /** Fungsi utama untuk memanggil Gemini API */
+        async function generatePrompt(retryCount = 0) {
+            const apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+            const desc = productDescription.value.trim();
+            const mode = document.querySelector('input[name="promptMode"]:checked').value;
 
             // Validasi input
-            if (!description.trim() || !base64ImageData) {
-                errorMessage.innerText = "Harap masukkan deskripsi DAN unggah gambar produk.";
-                errorMessage.classList.remove('hidden');
+            if (!apiKey) {
+                showGlobalError("API Key Google AI Studio tidak ditemukan. Harap simpan API Key Anda di Pengaturan.");
+                return;
+            }
+            if (!base64ImageData || !imageMimeType) {
+                showGlobalError("Silakan unggah gambar produk terlebih dahulu.");
+                return;
+            }
+            if (!desc) {
+                showGlobalError("Silakan isi deskripsi produk terlebih dahulu.");
                 return;
             }
 
             // Tampilkan status loading
-            button.disabled = true;
-            buttonText.innerText = 'Menganalisis...';
-            spinner.style.display = 'inline-block';
-            errorMessage.classList.add('hidden');
-            outputPlaceholder.classList.remove('hidden');
-            outputContainer.classList.add('hidden');
-            outputContainer.innerHTML = ''; // Kosongkan hasil sebelumnya
+            setLoading(true);
 
-            // System Prompt: Ini adalah "otak" saya sebagai model senior
-            const systemPrompt = `You are a world-class professional model and casting director with 25 years of experience. Your task is to analyze a product description and its image.
-Based ONLY on this information, generate FIVE (5) different professional image prompts for human avatars (models) perfectly suited to advertise this product.
-**Constraint:** All avatars MUST be from specific Southeast Asian nationalities (e.g., Indonesian, Thai, Vietnamese, Filipino, Malaysian). Provide a good mix of genders and styles unless the product is clearly for one gender.
-**Focus:** Each prompt MUST focus *only* on the avatar and their attire. Use a *specific* nationality from the constraint list (e.g., 'A professional Indonesian female avatar, mid-30s...' or 'A professional Thai male avatar...'). Do NOT use the generic term 'Southeast Asian' in the generated prompt. Do NOT describe pose, background, or visual style.
-Return ONLY the 5 prompts. The response will be structured as a JSON array of strings.`;
-            
-            // User Prompt
-            const userQuery = `Product Description: "${description}". Analyze this description and the provided product image, then generate the 5 avatar prompts as instructed.`;
+            // Pilih "Otak" AI berdasarkan mode
+            const selectedSystemPrompt = (mode === 'pro') ? systemPrompt_Pro : systemPrompt_Review;
 
-            // Konfigurasi API
-            // const apiKey = ""; // BARIS INI TIDAK LAGI DIGUNAKAN
-            const apiUrl = `https://generativela${''}nguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`; // Menggunakan key dari localStorage
-
+            // Buat payload
             const payload = {
                 contents: [
                     {
                         role: "user",
                         parts: [
-                            { text: userQuery },
+                            { text: `Deskripsi Produk: ${desc}` },
                             {
                                 inlineData: {
-                                    mimeType: "image/jpeg", // Asumsi jpeg, bisa juga disesuaikan
+                                    mimeType: imageMimeType,
                                     data: base64ImageData
                                 }
                             }
                         ]
                     }
                 ],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-                // Meminta API untuk mengembalikan JSON
+                systemInstruction: selectedSystemPrompt,
                 generationConfig: {
                     responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        items: { "type": "STRING" },
-                        description: "An array of 5 different prompt strings for the avatar."
-                    }
                 }
             };
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             try {
                 const response = await fetch(apiUrl, {
@@ -395,101 +409,124 @@ Return ONLY the 5 prompts. The response will be structured as a JSON array of st
                 });
 
                 if (!response.ok) {
-                    const errorBody = await response.json();
-                    throw new Error(`API Error: ${response.status} ${response.statusText}. ${errorBody?.error?.message || ''}`);
+                    // Handle API errors (termasuk throttling 429)
+                    if (response.status === 429 && retryCount < 3) {
+                        // Exponential backoff: 1s, 2s, 4s
+                        const delay = Math.pow(2, retryCount) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return generatePrompt(retryCount + 1); // Coba lagi
+                    }
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `Error: ${response.status}`);
                 }
 
                 const result = await response.json();
                 
-                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
-                    const jsonString = result.candidates[0].content.parts[0].text;
-                    let prompts;
-                    
-                    try {
-                        prompts = JSON.parse(jsonString); // Ini akan menjadi array
-                        if (!Array.isArray(prompts)) throw new Error("Format respon bukan array.");
-                    } catch (e) {
-                        throw new Error(`Gagal mem-parsing respon JSON: ${e.message}. Respon mentah: ${jsonString}`);
-                    }
-                    
-                    // Tampilkan hasil (LOOPING)
-                    prompts.forEach((promptText, index) => {
-                        const promptId = `prompt-${index}`;
-                        
-                        // Buat elemen <pre>
-                        const preElement = document.createElement('pre');
-                        preElement.id = promptId;
-                        preElement.className = 'prompt-block'; // Menggunakan style yang ada
-                        preElement.innerText = promptText.trim();
-                        
-                        // Buat elemen <button>
-                        const buttonElement = document.createElement('button');
-                        buttonElement.className = 'mt-2 w-full bg-gray-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition-colors duration-300';
-                        buttonElement.innerText = 'Salin Opsi ' + (index + 1);
-                        buttonElement.setAttribute('onclick', `copyPrompt('${promptId}', this)`);
-                        
-                        // Buat container untuk prompt + tombol
-                        const promptWrapper = document.createElement('div');
-                        promptWrapper.appendChild(preElement);
-                        promptWrapper.appendChild(buttonElement);
-                        
-                        // Tambahkan ke container utama
-                        outputContainer.appendChild(promptWrapper);
-                    });
-
-                    outputPlaceholder.classList.add('hidden');
-                    outputContainer.classList.remove('hidden');
-
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const jsonText = candidate.content.parts[0].text;
+                    const promptArray = JSON.parse(jsonText);
+                    displayResults(promptArray);
                 } else {
-                    throw new Error("Respon API tidak valid atau tidak berisi teks.");
+                    throw new Error("Respons AI tidak valid atau kosong.");
                 }
 
             } catch (error) {
-                console.error('Error generating prompt:', error);
-                errorMessage.innerText = `Terjadi kesalahan: ${error.message}`;
-                errorMessage.classList.remove('hidden');
+                showGlobalError(`Gagal membuat prompt: ${error.message}`);
             } finally {
-                // Sembunyikan status loading
-                button.disabled = false;
-                buttonText.innerText = 'Buat 5 Opsi Prompt';
-                spinner.style.display = 'none';
+                setLoading(false);
             }
         }
 
-        // Fungsi untuk menyalin prompt (TIDAK PERLU DIUBAH)
-        function copyPrompt(elementId, button) {
-            const promptText = document.getElementById(elementId).innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = promptText;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            tempTextArea.setSelectionRange(0, 99999);
+        // --- 4. Fungsi Utilitas UI ---
 
-            try {
-                document.execCommand('copy');
+        /** Menampilkan hasil (array of prompts) di UI */
+        function displayResults(prompts) {
+            outputContainer.innerHTML = ''; // Kosongkan kontainer
+            placeholder.classList.add('hidden');
+
+            prompts.forEach((promptText, index) => {
+                const promptId = `prompt-${index}`;
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200 p-4 rounded-lg shadow-sm';
                 
-                // Umpan balik visual
-                const originalText = button.innerText;
-                button.innerText = 'Berhasil Disalin!';
-                button.disabled = true;
-                button.classList.add('bg-green-500', 'hover:bg-green-600');
-                button.classList.remove('bg-gray-600', 'hover:bg-gray-700');
+                card.innerHTML = `
+                    <p id="${promptId}" class="text-sm text-slate-700 mb-3">${promptText}</p>
+                    <button data-copy-target="${promptId}" class="copy-button flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-all">
+                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 4h8a2 2 0 012 2v8a2 2 0 01-2 2h-8a2 2 0 01-2-2v-8a2 2 0 012-2z"></path></svg>
+                        Salin Prompt
+                    </button>
+                `;
+                outputContainer.appendChild(card);
+            });
+        }
 
+        /** Menyalin teks ke clipboard */
+        function copyPrompt(event) {
+            // Kita cari tombol yang diklik
+            const button = event.target.closest('.copy-button');
+            if (!button) return;
+
+            const targetId = button.dataset.copyTarget;
+            const textToCopy = document.getElementById(targetId).innerText;
+            
+            try {
+                // Metode fallback untuk clipboard
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                // Feedback visual
+                const originalText = button.innerHTML;
+                button.innerHTML = `
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Tersalin!
+                `;
                 setTimeout(() => {
-                    button.innerText = originalText;
-                    button.disabled = false;
-                    button.classList.remove('bg-green-500', 'hover:bg-green-600');
-                    button.classList.add('bg-gray-600', 'hover:bg-gray-700');
+                    button.innerHTML = originalText;
                 }, 2000);
 
             } catch (err) {
-                console.error('Gagal menyalin:', err);
+                showGlobalError('Gagal menyalin prompt.');
             }
-
-            document.body.removeChild(tempTextArea);
         }
-    </script>
 
+        /** Menampilkan status loading di tombol utama */
+        function setLoading(isLoading) {
+            if (isLoading) {
+                generateButton.disabled = true;
+                generateSpinner.style.display = 'inline-block';
+                generateButtonText.innerText = 'Membuat Prompt...';
+                globalErrorMessage.classList.add('hidden'); // Sembunyikan error lama
+            } else {
+                generateButton.disabled = false;
+                generateSpinner.style.display = 'none';
+                generateButtonText.innerText = 'Buat 5 Opsi Prompt';
+            }
+        }
+
+        /** Menampilkan pesan error global */
+        function showGlobalError(message) {
+            globalErrorMessage.innerText = message;
+            globalErrorMessage.classList.remove('hidden');
+            // Sembunyikan setelah 5 detik
+            setTimeout(() => {
+                globalErrorMessage.classList.add('hidden');
+            }, 5000);
+        }
+        
+        // --- Event Listeners ---
+        saveKeyButton.addEventListener('click', saveKey);
+        deleteKeyButton.addEventListener('click', deleteKey);
+        fileUpload.addEventListener('change', handleFileSelect);
+        removeImageButton.addEventListener('click', removeImage);
+        generateButton.addEventListener('click', () => generatePrompt(0)); // Mulai generate (retry count 0)
+        outputContainer.addEventListener('click', copyPrompt); // Event delegation untuk tombol salin
+
+    </script>
 </body>
 </html>
 
